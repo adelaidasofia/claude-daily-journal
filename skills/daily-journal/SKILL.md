@@ -24,6 +24,16 @@ Save to `[VAULT_PATH]/.journal-prefs.md`. Read on every future invocation before
 
 ---
 
+## Language
+
+Respond in the language the user is writing in. If they write in Spanish, conduct the entire interview and write the journal entry in Spanish. The floor names have established Spanish equivalents — use these when writing in Spanish:
+
+Asco (1) · Vergüenza (2) · Bochorno (3) · Culpa (4) · Apatía (5) · Resignación (6) · Confusión (7) · Soledad (8) · Aburrimiento (9) · Duelo (10) · Decepción (11) · Herida (12) · Miedo (13) · Frustración (14) · Deseo (15) · Rabia (16) · Desprecio (17) · Orgullo (18) · Valentía (19) · Esperanza (20) · Neutralidad (21) · Disposición (22) · Aceptación (23) · Razón (24) · Confianza (25) · Compasión (26) · Humildad (27) · Pertenencia (28) · Amor (29) · Gratitud (30) · Emoción/Entusiasmo (31) · Asombro (32) · Alegría (33) · Paz (34)
+
+The Substack link and framework reference remain the same regardless of language.
+
+---
+
 ## Flow
 
 ### Step 0 (optional): RescueTime
@@ -250,6 +260,8 @@ creationDate: YYYY-MM-DDTHH:MM
 **Critical separation rule:** The `## Journal` section = user's original voice only. Panel voices never appear in that section. Period.
 
 **Floor tag format:** Always hyperlink the floor name to the High-Rise Substack: `[FloorName](https://adelaidadiazroa.substack.com/s/internal-design)`. If multiple floors, link each one.
+
+**Body-text floor links:** Any time a floor name appears in the `## Journal` section body text (e.g., "I was sitting in Fear all day", "that was a Courage moment"), hyperlink it the same way: `[Fear](https://adelaidadiazroa.substack.com/s/internal-design)`. First occurrence per floor per entry only — don't repeat on every mention.
 
 After saving: verify with `ls -la [path]`. If save fails, say so immediately.
 
