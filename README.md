@@ -21,13 +21,13 @@ The floor framework is the differentiator. Over time, your journal becomes a nav
 ## Install
 
 ```bash
-claude plugin add github.com/[your-github-username]/claude-daily-journal
+claude plugin add github.com/adelaidasofia/claude-daily-journal
 ```
 
 Or clone manually and add:
 
 ```bash
-git clone https://github.com/[your-github-username]/claude-daily-journal ~/.claude/plugins/claude-daily-journal
+git clone https://github.com/adelaidasofia/claude-daily-journal ~/.claude/plugins/claude-daily-journal
 claude plugin add ~/.claude/plugins/claude-daily-journal
 ```
 
