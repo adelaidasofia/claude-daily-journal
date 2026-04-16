@@ -1,0 +1,8 @@
+{
+  "name": "daily-journal",
+  "description": "Conversational daily journaling with emotional floor detection, behavior accountability, and optional advisory panel commentary. Saves structured Obsidian markdown entries.",
+  "author": {
+    "name": "Adelaida Diaz-Roa",
+    "email": ""
+  }
+}
