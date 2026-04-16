@@ -1,8 +1,10 @@
 {
   "name": "daily-journal",
   "description": "Conversational daily journaling with emotional floor detection, behavior accountability, and optional advisory panel commentary. Saves structured Obsidian markdown entries.",
+  "version": "1.0.0",
   "author": {
-    "name": "Adelaida Diaz-Roa",
-    "email": ""
-  }
+    "name": "Adelaida Diaz-Roa"
+  },
+  "repository": "https://github.com/adelaidasofia/claude-daily-journal",
+  "license": "MIT"
 }
