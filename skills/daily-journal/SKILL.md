@@ -259,9 +259,53 @@ creationDate: YYYY-MM-DDTHH:MM
 
 **Critical separation rule:** The `## Journal` section = user's original voice only. Panel voices never appear in that section. Period.
 
-**Floor tag format:** Always hyperlink the floor name to the High-Rise Substack: `[FloorName](https://adelaidadiazroa.substack.com/s/internal-design)`. If multiple floors, link each one.
+**Floor wikilinks — auto-link everything:** Every time a floor name appears in the saved entry — in the body text, in the tag line, anywhere — wrap it as `[[FloorName]]`. First occurrence in the body, every occurrence in the tag line. When writing in Spanish, use the Spanish alias instead (e.g., `[[Miedo]]` routes to Fear.md via aliases). This is what builds the graph.
 
-**Body-text floor links:** Any time a floor name appears in the `## Journal` section body text (e.g., "I was sitting in Fear all day", "that was a Courage moment"), hyperlink it the same way: `[Fear](https://adelaidadiazroa.substack.com/s/internal-design)`. First occurrence per floor per entry only — don't repeat on every mention.
+**Spanish floor aliases** (use these in Spanish entries — they all route to the same floor file):
+Asco (1) · Vergüenza (2) · Bochorno (3) · Culpa (4) · Apatía (5) · Resignación (6) · Confusión (7) · Soledad (8) · Aburrimiento (9) · Duelo (10) · Decepción (11) · Herida (12) · Miedo (13) · Frustración (14) · Deseo (15) · Rabia (16) · Desprecio (17) · Orgullo (18) · Valentía (19) · Esperanza (20) · Neutralidad (21) · Disposición (22) · Aceptación (23) · Razón (24) · Confianza (25) · Compasión (26) · Humildad (27) · Pertenencia (28) · Amor (29) · Gratitud (30) · Entusiasmo (31) · Asombro (32) · Alegría (33) · Paz (34)
+
+**Floor tag line format:**
+- English: `*Floor: [[Fear]] · [[Low Floors]]*`
+- Spanish: `*Piso: [[Miedo]] · [[Pisos Bajos]]*`
+
+**Floor note files:** Each floor has its own note. When saving an entry whose floor note doesn't exist yet, create it with this exact format:
+
+```markdown
+---
+aliases: [floor-name-lowercase, common-synonyms, spanish-equivalents]
+floor_number: [X]
+type: concept
+floor_tier: [low|middle|high]
+creationDate: YYYY-MM-DD
+---
+# [[FloorName|FloorName]]
+
+**[[The High-Rise Series|High-Rise]] Floor:** [X]
+**[[Energy|Energy]]:** [one-line energy description]
+
+[2-3 sentence description of the floor — what it feels like, what it is.]
+
+## How it shows up
+- [symptom or behavior]
+- [symptom or behavior]
+- [symptom or behavior]
+
+## The way out
+[1-2 sentences on what moves you off this floor.]
+
+## From your journals
+*(Fills in over time as entries accumulate.)*
+
+## Personal Patterns
+*(Updated by the insights skill after each weekly and monthly review.)*
+
+## [[Connection|Connected]]
+[[Adjacent Floor]] | [[Related Concept]] | [[Opposite Floor]]
+
+**Substack:** [Internal Design](https://adelaidadiazroa.substack.com/s/internal-design) | [Diseño Interior](https://adelaidadiazroa.substack.com/s/internal-design)
+```
+
+If the note already exists, check for the bilingual Substack line at the bottom. Add it if missing.
 
 After saving: verify with `ls -la [path]`. If save fails, say so immediately.
 
