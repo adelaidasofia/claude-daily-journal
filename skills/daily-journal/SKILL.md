@@ -1,7 +1,7 @@
 ---
 name: daily-journal
 description: Use this skill when the user wants to journal, do a daily check-in, process their day, or says /journal. Interviews the user conversationally, identifies their emotional floor using the High-Rise framework, optionally runs behavior accountability and advisory panel commentary, and saves a structured Obsidian markdown entry. Do NOT use for meeting notes, weekly/monthly reviews, or pattern analysis across multiple entries.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Daily Journal — Interview & Entry
@@ -236,6 +236,17 @@ creationDate: YYYY-MM-DDTHH:MM
 ## Journal
 [First-person narrative in the user's voice. Stream of consciousness, honest, casual. Specific details they shared. Don't over-polish. Include gratitude note naturally if they gave one. Include insights surfaced during the interview they wouldn't have written alone.]
 
+### My responses to the panel (verbatim, every message I typed back in this session)
+*Required by the verbatim-capture rule. Every message the user typed during this journal session, word-for-word, in chronological order. Do not paraphrase, do not trim, do not fix typos. Each message gets a short italic context label, then the message as a blockquote.*
+
+*On [what this message was about]:*
+> [verbatim message 1]
+
+*On [what this message was about]:*
+> [verbatim message 2]
+
+[…continue for every message they typed.]
+
 **Movement:** [X]/[target] this week · **Sleep:** [bedtime] · **Meditation:** [yes/no] · **Focus:** [X]/[target] blocks
 **RescueTime:** Pulse [X] · Productive [Xh] · Distracting [Xh] · Top apps: [apps]  *(omit entire line if not connected)*
 
@@ -258,6 +269,8 @@ creationDate: YYYY-MM-DDTHH:MM
 ```
 
 **Critical separation rule:** The `## Journal` section = user's original voice only. Panel voices never appear in that section. Period.
+
+**Verbatim-capture rule (no exceptions):** Every message the user typed during the journal session — every answer, every tangent, every panel reply, every correction, every screenshot caption — must be logged word-for-word under `### My responses to the panel (verbatim, ...)` inside the `## Journal` section. No paraphrase. No summary. No typo fixes. The narrative above is the readable synthesis; the verbatim subsection is the archive. A journal that silently paraphrases is a journal the user stops trusting — so if you find yourself choosing between "elegant summary" and "verbatim record," choose verbatim every time. If a single message is very long (500+ words), the full message still goes in the verbatim subsection; the narrative may reference it ("full paste in verbatim section below") to avoid duplication.
 
 **Floor wikilinks — auto-link everything:** Every time a floor name appears in the saved entry — in the body text, in the tag line, anywhere — wrap it as `[[FloorName]]`. First occurrence in the body, every occurrence in the tag line. When writing in Spanish, use the Spanish alias instead (e.g., `[[Miedo]]` routes to Fear.md via aliases). This is what builds the graph.
 
