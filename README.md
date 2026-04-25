@@ -55,7 +55,7 @@ On first use, Claude will ask for your vault path and preferences. Takes 60 seco
 
 ## The High-Rise framework
 
-The 22-floor emotional scale was developed by [Adelaida Diaz-Roa](https://github.com/adelaidasofia) as part of *The High-Rise Series*. Each floor has a name, a description, and a direction — Low Floors (1–12), Middle Floors (13–17), High Floors (18–22).
+The 34-floor emotional scale was developed by [Adelaida Diaz-Roa](https://github.com/adelaidasofia) as part of *The High-Rise Series*. Each floor has a name, a description, and a direction — Low Floors (1–18, reactive), Middle Floors (19–24, transitional), High Floors (25–34, generative). The framework was expanded from 16 → 22 → 34 floors by mapping ~150 named human emotions onto the building, surfacing distinctions the smaller schemas collapsed (Anger vs Frustration, Joy vs Excitement, Love vs Compassion vs Gratitude).
 
 The goal is not to stay on high floors. It's to know which floor you're on, understand how you got there, and recognize the moves that take you somewhere else.
 
