@@ -31,6 +31,16 @@ git clone https://github.com/adelaidasofia/claude-daily-journal ~/.claude/plugin
 claude plugin add ~/.claude/plugins/claude-daily-journal
 ```
 
+### Quick-try (existing Claude Code 2.1.129+ users)
+
+For a one-command session-scoped trial without a permanent install:
+
+```bash
+claude --plugin-url https://github.com/adelaidasofia/claude-daily-journal/releases/latest/download/claude-daily-journal.zip
+```
+
+This loads the plugin **for the current session only** so you can evaluate the skill against your existing vault. Use `claude plugin add` (above) once you've decided to keep it.
+
 Then in any Claude Code session:
 
 ```

@@ -1,0 +1,78 @@
+name: release
+
+# Builds claude-daily-journal.zip + tar.gz on every v* tag push.
+# Consumable via Claude Code 2.1.129+ --plugin-url:
+#   claude --plugin-url https://github.com/adelaidasofia/claude-daily-journal/releases/latest/download/claude-daily-journal.zip
+#
+# Single trigger: tag push. To rebuild a release, delete the tag + retag.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: validate plugin manifest
+        run: |
+          set -e
+          test -f .claude-plugin/plugin.json || { echo "::error::missing .claude-plugin/plugin.json"; exit 1; }
+          python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
+
+      - name: build release archives
+        run: |
+          set -e
+          TAG="${GITHUB_REF#refs/tags/}"
+          STAGE="/tmp/claude-daily-journal"
+          rm -rf "$STAGE" && mkdir -p "$STAGE"
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='__pycache__' \
+            --exclude='.venv' \
+            --exclude='*.bak' \
+            --exclude='*.bak-*' \
+            --exclude='.DS_Store' \
+            --exclude='.env' \
+            --exclude='.env.*' \
+            --include='.env.example' \
+            --exclude='*.key' \
+            --exclude='*.pem' \
+            --exclude='*.pfx' \
+            --exclude='*.p12' \
+            --exclude='secrets.json' \
+            --exclude='.zsh_secrets' \
+            ./ "$STAGE/"
+
+          (cd /tmp && zip -rq claude-daily-journal.zip claude-daily-journal)
+          mv /tmp/claude-daily-journal.zip ./claude-daily-journal.zip
+          sha256sum claude-daily-journal.zip > claude-daily-journal.zip.sha256
+
+          (cd /tmp && tar czf claude-daily-journal.tar.gz claude-daily-journal)
+          mv /tmp/claude-daily-journal.tar.gz ./claude-daily-journal.tar.gz
+          sha256sum claude-daily-journal.tar.gz > claude-daily-journal.tar.gz.sha256
+
+          ls -la claude-daily-journal.zip claude-daily-journal.tar.gz *.sha256
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+
+      - name: create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --generate-notes \
+            claude-daily-journal.zip \
+            claude-daily-journal.zip.sha256 \
+            claude-daily-journal.tar.gz \
+            claude-daily-journal.tar.gz.sha256

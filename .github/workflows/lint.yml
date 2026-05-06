@@ -1,0 +1,78 @@
+name: lint
+
+# JSON validity + PR-scoped private-context scan. ~30 seconds. $0 on public repos.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  json:
+    name: JSON validity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: validate
+        run: |
+          set -e
+          fail=0
+          while IFS= read -r f; do
+            if ! python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$f" 2>err; then
+              echo "::error file=$f::invalid JSON"
+              cat err | sed "s|^|  |"
+              fail=1
+            fi
+          done < <(find . \( -name 'plugin.json' -o -name 'marketplace.json' -o -name '*.mcp.json' \) -not -path './.git/*')
+          exit $fail
+
+  privacy:
+    name: private-context tokens (PR-scoped)
+    runs-on: ubuntu-latest
+    # Mirrors the maintainer's local hookify guard for external contributors.
+    # Scoped to files CHANGED in the PR. Pushes to main bypass — local
+    # hookify catches direct pushes.
+    #
+    # First-letter character classes (e.g. [A]delaida, [O]nde) keep this
+    # workflow's source from matching the maintainer's own hookify when
+    # the file is written.
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: fetch base branch
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git fetch origin "$BASE_REF" --depth=50
+      - name: scan changed files
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -e
+          P='\b[A]delaida\b|\b[O]nde\b|\b[D]iaz.Roa\b|\b[B]ogot[aá]\b|\b[S]ergio Perez\b|\b[N]atalia\b|\b[P]aola\b|\b[A]ccenture\b|\b[H]igh.Rise Series\b|\b[S]hark Tank\b'
+          BASE="origin/$BASE_REF"
+          fail=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            [ ! -f "$f" ] && continue
+            case "$f" in
+              */.venv/*|*/node_modules/*|*/__pycache__/*) continue ;;
+            esac
+            case "$f" in
+              *.md|*.sh|*.ps1|*.py|*.json|*.yml|*.yaml|*.txt|.env.example) ;;
+              *) continue ;;
+            esac
+            if matches=$(grep -nE "$P" "$f" 2>/dev/null); then
+              echo "::error file=$f::private-context token added in this PR"
+              echo "$matches" | head -3 | sed 's|^|  |'
+              fail=1
+            fi
+          done < <(git diff --name-only "$BASE"..HEAD)
+          if [ "$fail" = "1" ]; then
+            echo "::error::Private-context scan failed. Use placeholders or fictional names instead."
+            exit 1
+          fi
+          echo "Private-context scan passed (changed files only)."

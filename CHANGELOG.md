@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.0 — 2026-05-06
+
+**Release infrastructure + `--plugin-url` quick-try path.** Plus rolling up the post-1.2.0 polish on the journal skill.
+
+- **`.github/workflows/release.yml`** — tag-triggered builder. Validates `.claude-plugin/plugin.json` parses, builds clean `claude-daily-journal.zip` + `.tar.gz` (excludes `.git`, `.github`, secrets, build artifacts), generates SHA256 sums, publishes the GitHub release with auto-generated notes from PRs merged since the previous tag. Stable URL: `https://github.com/adelaidasofia/claude-daily-journal/releases/latest/download/claude-daily-journal.zip`.
+- **`.github/workflows/lint.yml`** — JSON validity (plugin.json, mcp.json) and a PR-scoped `privacy` job that mirrors the maintainer's local hookify guard for external contributors.
+- **README quick-try section** — documents the `claude --plugin-url` invocation for existing Claude Code 2.1.129+ users who want to try the skill against an existing vault without a full clone-and-add.
+- **plugin.json bumped 1.0.0 → 1.3.0** — manifest had drifted behind the CHANGELOG (1.2.0 entry was on Apr 17 but plugin.json never bumped). This catches it up plus reflects the post-1.2.0 polish (verbatim rule strengthening + journal-vs-staging boundary, README 34-floor framework reference) that landed without a version bump.
+
+**No action required** for existing installs. The `claude plugin add` install path continues to work unchanged.
+
+---
+
 ## 1.2.0 — 2026-04-17
 
 **Verbatim-capture rule added.** Every message the user types during a journal session now gets logged word-for-word in a dedicated `### My responses to the panel (verbatim, every message I typed back in this session)` subsection inside the entry. No paraphrase. No summary. No typo fixes.
