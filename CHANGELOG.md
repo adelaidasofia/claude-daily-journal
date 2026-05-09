@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-08 — README quick-try min-version bumped to 2.1.133+
+
+Tracking the `ai-brain-starter` floor bump for the same reason: 2.1.133 (released 2026-05-08) fixes a silent bug where subagents weren't discovering project/user/plugin skills via the Skill tool. The `/journal` flow cascades into the advisory-panel rule and can spawn humanizer + deconstruct calls. When that cascade runs inside a subagent, the pre-2.1.133 bug applies. Plus the parallel-session 401 race fix benefits anyone running multiple worktrees.
+
+README quick-try line bumped 2.1.129+ → 2.1.133+. No manifest version bump (single-line documentation change). The full `claude plugin add` install path is unaffected.
+
+---
+
 ## 1.3.0 — 2026-05-06
 
 **Release infrastructure + `--plugin-url` quick-try path.** Plus rolling up the post-1.2.0 polish on the journal skill.

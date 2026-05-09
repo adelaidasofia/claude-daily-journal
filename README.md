@@ -31,7 +31,7 @@ git clone https://github.com/adelaidasofia/claude-daily-journal ~/.claude/plugin
 claude plugin add ~/.claude/plugins/claude-daily-journal
 ```
 
-### Quick-try (existing Claude Code 2.1.129+ users)
+### Quick-try (existing Claude Code 2.1.133+ users)
 
 For a one-command session-scoped trial without a permanent install:
 
