@@ -2,7 +2,7 @@
 
 A Claude Code plugin for conversational daily journaling with emotional floor detection, optional behavior accountability, and an optional advisory panel. Saves structured Obsidian markdown entries.
 
-Built around the **High-Rise Emotional Altitude Scale** — a 22-level emotional framework that gives language to where you are, not just what happened.
+Built around a **34-floor emotional altitude scale** — a framework that gives language to where you are, not just what happened.
 
 ---
 
@@ -20,26 +20,10 @@ The floor framework is the differentiator. Over time, your journal becomes a nav
 
 ## Install
 
-```bash
-claude plugin add github.com/adelaidasofia/claude-daily-journal
-```
+Open Claude Code, paste:
 
-Or clone manually and add:
-
-```bash
-git clone https://github.com/adelaidasofia/claude-daily-journal ~/.claude/plugins/claude-daily-journal
-claude plugin add ~/.claude/plugins/claude-daily-journal
-```
-
-### Quick-try (existing Claude Code 2.1.133+ users)
-
-For a one-command session-scoped trial without a permanent install:
-
-```bash
-claude --plugin-url https://github.com/adelaidasofia/claude-daily-journal/releases/latest/download/claude-daily-journal.zip
-```
-
-This loads the plugin **for the current session only** so you can evaluate the skill against your existing vault. Use `claude plugin add` (above) once you've decided to keep it.
+    /plugin marketplace add adelaidasofia/claude-daily-journal
+    /plugin install claude-daily-journal@claude-daily-journal
 
 Then in any Claude Code session:
 
@@ -63,9 +47,9 @@ On first use, Claude will ask for your vault path and preferences. Takes 60 seco
 
 ---
 
-## The High-Rise framework
+## The 34-floor framework
 
-The 34-floor emotional scale was developed by [Adelaida Diaz-Roa](https://github.com/adelaidasofia) as part of *The High-Rise Series*. Each floor has a name, a description, and a direction — Low Floors (1–18, reactive), Middle Floors (19–24, transitional), High Floors (25–34, generative). The framework was expanded from 16 → 22 → 34 floors by mapping ~150 named human emotions onto the building, surfacing distinctions the smaller schemas collapsed (Anger vs Frustration, Joy vs Excitement, Love vs Compassion vs Gratitude).
+Each floor has a name, a description, and a direction — Low Floors (1–18, reactive), Middle Floors (19–24, transitional), High Floors (25–34, generative). The framework was expanded from 16 → 22 → 34 floors by mapping ~150 named human emotions onto the building, surfacing distinctions the smaller schemas collapsed (Anger vs Frustration, Joy vs Excitement, Love vs Compassion vs Gratitude).
 
 The goal is not to stay on high floors. It's to know which floor you're on, understand how you got there, and recognize the moves that take you somewhere else.
 
@@ -128,3 +112,33 @@ claude plugin marketplace add anthropics/claude-plugins-community
 ## License
 
 MIT
+
+---
+
+<details>
+<summary>Legacy install</summary>
+
+Earlier Claude Code versions used different install commands. If the new `/plugin marketplace add` syntax is unavailable, these still work:
+
+```bash
+claude plugin add github.com/adelaidasofia/claude-daily-journal
+```
+
+Or clone manually and add:
+
+```bash
+git clone https://github.com/adelaidasofia/claude-daily-journal ~/.claude/plugins/claude-daily-journal
+claude plugin add ~/.claude/plugins/claude-daily-journal
+```
+
+### Quick-try (Claude Code 2.1.133+)
+
+For a one-command session-scoped trial without a permanent install:
+
+```bash
+claude --plugin-url https://github.com/adelaidasofia/claude-daily-journal/releases/latest/download/claude-daily-journal.zip
+```
+
+This loads the plugin for the current session only.
+
+</details>

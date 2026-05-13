@@ -1,0 +1,15 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "claude-daily-journal",
+  "owner": {
+    "name": "Mycelium AI",
+    "url": "https://myceliumai.co"
+  },
+  "plugins": [
+    {
+      "name": "claude-daily-journal",
+      "source": "./",
+      "description": "Conversational daily journaling with emotional floor detection, behavior accountability, and optional advisory panel commentary. Saves structured Obsidian markdown entries."
+    }
+  ]
+}
