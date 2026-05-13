@@ -2,7 +2,7 @@
 
 A Claude Code plugin for conversational daily journaling with emotional floor detection, optional behavior accountability, and an optional advisory panel. Saves structured Obsidian markdown entries.
 
-Built around the **High-Rise Emotional Altitude Scale** — a 22-level emotional framework that gives language to where you are, not just what happened.
+Built around a **34-floor emotional altitude scale** — a framework that gives language to where you are, not just what happened.
 
 ---
 
@@ -47,9 +47,9 @@ On first use, Claude will ask for your vault path and preferences. Takes 60 seco
 
 ---
 
-## The High-Rise framework
+## The 34-floor framework
 
-The 34-floor emotional scale was developed by [Adelaida Diaz-Roa](https://github.com/adelaidasofia) as part of *The High-Rise Series*. Each floor has a name, a description, and a direction — Low Floors (1–18, reactive), Middle Floors (19–24, transitional), High Floors (25–34, generative). The framework was expanded from 16 → 22 → 34 floors by mapping ~150 named human emotions onto the building, surfacing distinctions the smaller schemas collapsed (Anger vs Frustration, Joy vs Excitement, Love vs Compassion vs Gratitude).
+Each floor has a name, a description, and a direction — Low Floors (1–18, reactive), Middle Floors (19–24, transitional), High Floors (25–34, generative). The framework was expanded from 16 → 22 → 34 floors by mapping ~150 named human emotions onto the building, surfacing distinctions the smaller schemas collapsed (Anger vs Frustration, Joy vs Excitement, Love vs Compassion vs Gratitude).
 
 The goal is not to stay on high floors. It's to know which floor you're on, understand how you got there, and recognize the moves that take you somewhere else.
 
