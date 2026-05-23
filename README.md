@@ -1,5 +1,18 @@
 # claude-daily-journal
 
+
+<!-- mycelium-badges:start -->
+
+<p>
+  <a href="https://github.com/adelaidasofia/claude-daily-journal/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/adelaidasofia/claude-daily-journal?color=blue"></a>
+  <a href="https://github.com/adelaidasofia/claude-daily-journal/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/adelaidasofia/claude-daily-journal?color=eab308"></a>
+  <a href="https://github.com/adelaidasofia/claude-daily-journal/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/adelaidasofia/claude-daily-journal"></a>
+  <a href="https://github.com/adelaidasofia/claude-daily-journal/issues"><img alt="Open issues" src="https://img.shields.io/github/issues/adelaidasofia/claude-daily-journal"></a>
+  <a href="https://myceliumai.co"><img alt="Built by Mycelium AI" src="https://img.shields.io/badge/built_by-Mycelium_AI-15B89A"></a>
+</p>
+
+<!-- mycelium-badges:end -->
+
 A Claude Code plugin for conversational daily journaling with emotional floor detection, optional behavior accountability, and an optional advisory panel. Saves structured Obsidian markdown entries.
 
 Built around a **34-floor emotional altitude scale** — a framework that gives language to where you are, not just what happened.
