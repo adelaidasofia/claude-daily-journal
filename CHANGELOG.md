@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.4.0 — 2026-07-14
+
+**Movement mechanics: the journal now tracks how you MOVE between floors, not just where you stand.** Same journal-skill changes as today's `ai-brain-starter` update, shipped in lockstep.
+
+- **The door (new Step 6.5)** — every session closes with ONE small, dated, physical action matched to your floor, and tomorrow's session opens by asking whether it happened (new Step 1 door check; `door` / `door_prev` frontmatter). Includes the Maté guard: floors that deserve time get a container ("ten minutes to feel this fully"), not an exit.
+- **Body-first check (Step 4)** — sleep, food, movement, sunlight checked before accepting the day's story, recorded as `body_check` frontmatter. Two or more "no" answers and the skill says so: some of this floor might be body, not story.
+- **Shadow-twin probe (Step 4)** — one distinguishing question before tagging Acceptance, Neutrality, Peace, or Pride, because Resignation feels like Acceptance from the inside and the mislabel is how people stay stuck.
+- **Movement capture (Step 4)** — `floor_yesterday` plus `moved_because` (body / witness / rupture / rope / role / story), and `rope` when something pulled you up from a low floor. Over months this builds your personal rope inventory: what reliably works for YOU.
+- **Crisis protocol (new top-level section)** — a safety override that stops all mechanics, witnesses first, asks the nearest-rope question ("who or what would you get up for right now?"), surfaces a support line once, and still saves their words verbatim.
+- **Hand the naming back** — once ~30 entries exist, roughly weekly the user names the floor before Claude does. The skill trains the muscle instead of becoming it.
+- Entry-template frontmatter now carries a machine-readable `floor:` field (array form for elevator emotions) so the movement fields have something to read on the next session's lookup.
+- `plugin.json` and the skill frontmatter both bumped to 1.4.0.
+
+**No action required** for existing installs — new fields appear in entries as they're written; old entries don't need backfilling.
+
+---
+
 ## 2026-05-08 — README quick-try min-version bumped to 2.1.133+
 
 Tracking the `ai-brain-starter` floor bump for the same reason: 2.1.133 (released 2026-05-08) fixes a silent bug where subagents weren't discovering project/user/plugin skills via the Skill tool. The `/journal` flow cascades into the advisory-panel rule and can spawn humanizer + deconstruct calls. When that cascade runs inside a subagent, the pre-2.1.133 bug applies. Plus the parallel-session 401 race fix benefits anyone running multiple worktrees.
