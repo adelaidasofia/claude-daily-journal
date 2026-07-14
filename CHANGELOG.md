@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.0 — 2026-07-14
+
+**Movement mechanics: the journal now tracks how you move between floors, not just where you are.** Codified from a long research session on High-Rise movement dynamics (floor drivers, exits, loops, resilience direction).
+
+- **Crisis protocol** — formal override section: crisis language stops all mechanics (no panel, no accountability, no door), witness-first response, nearest-rope question, support line surfaced once, entry saved verbatim. Mirrors the `/rise` Tier 2 safety override.
+- **Body-first check (Step 4)** — low floors usually arrive body-first, story-second. Before accepting the user's causal story for a low floor, check sleep/food/movement/sunlight and record `body_check` frontmatter. Two or more "no" → name the possible body driver before analyzing the story.
+- **Shadow-twin probe (Step 4)** — mandatory distinguishing question before tagging Acceptance, Neutrality, Peace, or Pride (vs Resignation, Apathy, Boredom, Confidence). Mislabeling is the #1 way people stay stuck; the mislabel itself is logged as signal.
+- **Movement capture (Step 4)** — new frontmatter: `floor_yesterday`, `moved_because` (body | witness | rupture | rope | role | story), and `rope` (what pulled them up from a low floor). Builds each user's personal rope inventory and feeds transition/loop/resilience-direction analysis in the insights skill.
+- **The door (new Step 6.5)** — every session ends with ONE small, dated, physical action matched to floor tier (map + door, never map alone). Includes the Maté guard: fresh, proportionate floors get a container ("feel it fully," "tell one person"), not an exit — fast isn't always healthy. `door:` saved to frontmatter; next session opens by checking it (`door_prev`).
+- **Hand the naming back (Step 4)** — after ~30 entries, roughly weekly, the user names the floor before Claude does. The skill trains the muscle rather than becoming it.
+- `skills/daily-journal/SKILL.md` version bumped 1.2.0 → 1.4.0; plugin.json 1.3.0 → 1.4.0.
+
+---
+
 ## 2026-05-08 — README quick-try min-version bumped to 2.1.133+
 
 Tracking the `ai-brain-starter` floor bump for the same reason: 2.1.133 (released 2026-05-08) fixes a silent bug where subagents weren't discovering project/user/plugin skills via the Skill tool. The `/journal` flow cascades into the advisory-panel rule and can spawn humanizer + deconstruct calls. When that cascade runs inside a subagent, the pre-2.1.133 bug applies. Plus the parallel-session 401 race fix benefits anyone running multiple worktrees.

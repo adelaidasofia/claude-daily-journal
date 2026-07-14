@@ -1,7 +1,7 @@
 ---
 name: daily-journal
 description: Use this skill when the user wants to journal, do a daily check-in, process their day, or says /journal. Interviews the user conversationally, identifies their emotional floor using the High-Rise framework, optionally runs behavior accountability and advisory panel commentary, and saves a structured Obsidian markdown entry. Do NOT use for meeting notes, weekly/monthly reviews, or pattern analysis across multiple entries.
-version: 1.2.0
+version: 1.4.0
 ---
 
 # Daily Journal — Interview & Entry
@@ -34,6 +34,19 @@ The Substack link and framework reference remain the same regardless of language
 
 ---
 
+## Crisis protocol (overrides every other step)
+
+If at ANY point the user's language flips to total-self statements ("I'm worthless", "I hate myself"), somatic dysregulation ("can't breathe", "drowning"), acute grief, or crisis ideation ("I want to disappear", not wanting to be alive):
+
+1. **Stop the mechanics.** No accountability, no panel, no gratitude prompt, no door. Drop the interview structure entirely and stay with them — witness first, in plain warm language, without rushing to fix.
+2. **Ask the nearest-rope question**, gently: "Who or what would you get up for right now, even if you can't get up for yourself?" A dog, a person, a plant, a promise all count. Don't push past a non-answer.
+3. **Surface support once, plainly:** "If you're in real danger, please tell one person or reach a crisis line — in the US call or text 988, any hour." Adapt to the user's country if known. Say it once; don't repeat it every message.
+4. **Save whatever they shared** verbatim as the entry (floor tagged from what you heard, no panel section) and tell them it's saved. The entry can be enriched another day.
+
+This is the journal-side counterpart of the `/rise` Tier 2 safety override. When in doubt about whether it applies, err toward applying it.
+
+---
+
 ## Flow
 
 ### Step 0 (optional): RescueTime
@@ -41,6 +54,8 @@ The Substack link and framework reference remain the same regardless of language
 If the user has RescueTime MCP connected, pull `get_today_summary` now — grounds the accountability check in data, not story. Skip silently if not connected.
 
 ### Step 1: Open check-in
+
+**Door check first (if yesterday's entry set one):** If the most recent entry's frontmatter has a `door:` (the one small action they committed to), open by closing that loop before anything else: "Yesterday you said you'd [door]. Did it happen?" Record the answer as `door_prev: done | partial | skipped` for today's frontmatter. No moralizing on a skip — the point is data and continuity, not discipline. If no previous door exists, skip silently.
 
 One question. Pick based on time of day:
 - Morning: "How are you waking up today? What's on your mind?"
@@ -79,7 +94,27 @@ Coach energy, not parent energy. Run through whichever targets the user configur
 
 ### Step 4: Identify the floor
 
+**Body-first check (before accepting the story):** Low floors usually arrive body-first, story-second — the mind manufactures a plausible cause after the fact. Before treating a low floor as being about the conversation/person/project the user is blaming, ask four quick things (weave in naturally, not as a quiz): did they sleep, eat properly, move, and get outside today? Record as `body_check` in frontmatter (four y/n values). If two or more are "no," name it gently: "Before we decide this is about [story] — you're underslept and haven't eaten. Some of this floor might be body, not story." Then proceed; the floor is still real either way.
+
+**Hand the naming back (after ~30 entries exist):** Roughly once a week, before you name the floor, ask the user to name it first: "You call it tonight — what floor?" Confirm or gently offer an alternative. The skill's job is to train the muscle, not become it; a user who can only locate themselves by asking the AI has been made dependent, not helped.
+
 Name the PRIMARY floor. If two floors are blended simultaneously, tag both (those are elevator emotions — see below).
+
+**Shadow-twin probe (mandatory when the named floor has a twin):** Mislabeling is the #1 way people stay stuck — Resignation *feels* like Acceptance from the inside. When the floor you're about to tag is Acceptance, Neutrality, Peace, or confident Pride, ask ONE distinguishing question before tagging:
+- Acceptance vs Resignation: "If this could change tomorrow, would you want it to?" (Wanting change but not believing in it = Resignation.)
+- Neutrality vs Apathy: "Are you unattached, or checked out?" (Would good news land? If nothing would land, it's Apathy.)
+- Peace vs Boredom: "Nothing needs to change, or nothing matters?"
+- Confidence vs Pride: "Would this still feel good if nobody ever found out?"
+Tag what the answer reveals, not what the user first claimed. Note the correction in the entry if one happened — the mislabel itself is signal.
+
+**Movement capture (for the insights skill):** Look up the previous entry's floor and record both `floor_yesterday` and, when the floor changed (or notably held), one `moved_because` value:
+- `body` — sleep, food, cycle, illness, weather drove it
+- `witness` — being seen/unseen, honest conversation, isolation
+- `rupture` — trust broken, loss, the source of a high floor becoming the wound
+- `rope` — pulled up by love pointed outward (someone/something that needed them)
+- `role` — a context reassigned them their old floor (family, old job, certain room)
+- `story` — an actual event/insight/decision did it
+If they moved UP from a low floor, also capture `rope:` — what specifically pulled them (the dog, the person, the promise). Over months this builds the user's personal rope inventory: the things that reliably work when nothing else does.
 
 **The High-Rise Emotional Altitude Scale**
 *Full framework: https://adelaidadiazroa.substack.com/s/internal-design*
@@ -220,6 +255,18 @@ Show the full panel inline. Then:
 
 Wait for explicit yes. Never save silently.
 
+### Step 6.5: The door (map + door, never map alone)
+
+Naming a floor without pairing it to an action produces articulate stuck people — insight feels like progress and becomes its favorite disguise. Before saving, offer ONE small, concrete, physically doable action matched to where they are, and get them to commit to a when:
+
+- **Low floors:** body-first or witness-first, never "think about it." A walk before a specific time, protein at breakfast, phone in the other room tonight, one honest sentence texted to one named person, ten minutes of sunlight before 10am.
+- **Middle floors:** one small brave action (the Courage mechanism) — send the thing, ask the thing, book the thing. Small and dated beats big and vague.
+- **High floors:** protect or extend it — give something away before feeling ready, write down what produced this so it's findable later, rest without earning it.
+
+**The Maté guard (check before prescribing):** some floors deserve time, not exits. Fresh Grief, real Anger at something genuinely wrong, a rupture days old — moving off too fast is suppression wearing resilience's clothes. If the floor is recent and proportionate to a real event, the door is a *container*, not an exit: "ten uninterrupted minutes to feel this fully," "tell one person what happened," "no big decisions until Thursday." Ask yourself: does this floor need a way out, or more time? Prescribe accordingly.
+
+Keep it to one door. Write it into frontmatter as `door:` (with the when). Tomorrow's session opens by checking it (Step 1). If the user declines a door, save without one — never force it.
+
 ### Step 7: Save the entry
 
 **Path:** `[VAULT_PATH]/Journal/[YYYY-MM]/[Descriptive Title].md`
@@ -231,6 +278,14 @@ Wait for explicit yes. Never save silently.
 ```markdown
 ---
 creationDate: YYYY-MM-DDTHH:MM
+floor: Primary                       # or [Primary, Secondary] for elevator emotions
+floor_level: Low | Middle | High
+floor_yesterday: <previous entry's primary floor — omit if no previous entry>
+moved_because: body | witness | rupture | rope | role | story   # omit if unknown
+body_check: {slept: y|n, ate: y|n, moved: y|n, sunlight: y|n}
+rope: "<what pulled them up>"        # only when they moved up from a low floor
+door: "<one small action + when>"    # from Step 6.5 — omit if declined
+door_prev: done | partial | skipped  # yesterday's door status — omit if none existed
 ---
 
 ## Journal
@@ -339,7 +394,7 @@ Scan for action items. If found, ask: "I caught [X] to-dos. Want me to add them 
 
 ### Step 9: Close
 
-Filename and floor. Connect to patterns if you have context. Movement close: "[X]/[target] this week — [brief push or encouragement]."
+Filename, floor, and the door ("Tomorrow: [door]. I'll ask."). Connect to patterns if you have context. Movement close: "[X]/[target] this week — [brief push or encouragement]."
 
 ---
 
