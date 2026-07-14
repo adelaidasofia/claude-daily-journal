@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.0.0 — 2026-07-14
+
+**True sync with ai-brain-starter.** The plugin's journal skill had quietly diverged from the `daily-journal` skill in ai-brain-starter for months. This release re-establishes ai-brain-starter as the source of truth and rewrites this skill as its standalone rendering. New `docs/SYNC.md` documents the policy, the adaptation rules, and the intentional deltas so divergence can't recur silently.
+
+**Behavioral upgrades ported from ai-brain-starter:**
+
+- **Capture-first contract** — the entry is SAVED from the user's first substantive message; everything after is in-place enrichment. Graceful exit at every step: the entry is never held hostage to the interview or the panel. A captured-and-abandoned entry is a valid, complete entry.
+- **Resume-or-create (Step 0.0)** — a second `/journal` the same day resumes today's file instead of duplicating it. One calendar day = one growing entry.
+- **3:45 AM day boundary** — a 2 AM entry files under the previous day, matching how people actually journal.
+- **Narrating ≠ relitigating filter** — panel triggers no longer fire on retrospective mentions of closed decisions; only present-tense reweighing pulls a panelist.
+- **Panel confirm scoped to enrichment** — the panel is shown in full before it's written next to the user's words; the save itself never waits on it.
+- **Elevator emotions** — added Schadenfreude (Pride + corrupted Joy) and Overwhelm (any floor, flooding).
+- **`gratitudes:` + `entry_status:` frontmatter** — queryable by the insights skill; capture-stage vs. enriched entries are distinguishable.
+
+Carries forward everything from 1.4.0 (door, body-first check, shadow-twin probe, crisis protocol, movement capture). plugin.json bumped 1.4.0 → 2.0.0.
+
+---
+
 ## 1.4.0 — 2026-07-14
 
 **Movement mechanics: the journal now tracks how you move between floors, not just where you are.** Codified from a long research session on High-Rise movement dynamics (floor drivers, exits, loops, resilience direction).
