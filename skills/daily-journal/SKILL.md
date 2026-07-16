@@ -362,7 +362,7 @@ creationDate: YYYY-MM-DD
 ---
 # [[FloorName|FloorName]]
 
-**[[The High-Rise Series|High-Rise]] Floor:** [X]
+**High-Rise Floor:** [X]
 **[[Energy|Energy]]:** [one-line energy description]
 
 [2-3 sentence description of the floor — what it feels like, what it is.]
