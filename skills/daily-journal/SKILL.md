@@ -98,7 +98,15 @@ Coach energy, not parent energy. Run through whichever targets the user configur
 
 **Hand the naming back (after ~30 entries exist):** Roughly once a week, before you name the floor, ask the user to name it first: "You call it tonight — what floor?" Confirm or gently offer an alternative. The skill's job is to train the muscle, not become it.
 
-Name the PRIMARY floor. If two floors are blended simultaneously, tag both (those are elevator emotions — see below).
+Name the PRIMARY floor — the one floor the entry *landed* on. Naming a single base floor is deliberate: it is the move that reduces the charge, and it keeps the long-run data clean. Then, ONLY when the day moved from one floor to another, record the path in order as `floor_arc` (last element = the primary floor):
+
+```yaml
+floor: <primary floor>
+floor_level: <Low | Middle | High>
+floor_arc: [<floor>, <floor>, <primary floor>]   # optional — the path through the day, last element = floor
+```
+
+The arc is the point: the elevators are the lesson, so a path like Fear → Frustration → Hope carries more than any single endpoint, and `floor_arc` already holds every floor that was present plus the order they came in — there is no separate "floors present" list. Keep capture frictionless: **always** ask the one primary-floor question; **offer the arc only when the person signals the day moved** ("started rough, ended okay"); **never prompt for it on a still day** — just omit it. For a blended elevator emotion (Nostalgia = Grief + Love), tag the floor you land on as `floor` and, if it clarifies things, record the blend as `floor_arc`.
 
 **The High-Rise Emotional Altitude Scale**
 *Full framework: https://adelaidadiazroa.substack.com/s/internal-design*
@@ -278,7 +286,9 @@ One door only. Write it to frontmatter as `door:` (action + when). Tomorrow's se
 ```markdown
 ---
 creationDate: YYYY-MM-DDTHH:MM
-floor: [PrimaryFloor]            # array for elevator emotions, e.g. [Grief, Love] — first = dominant
+floor: PrimaryFloor              # single floor name — where the entry LANDED
+# floor_level: Low | Middle | High
+# floor_arc: [FloorA, FloorB, PrimaryFloor]   # OPTIONAL — ordered path through the day, last element = floor. Add ONLY when the day moved; omit on a still day.
 # Movement fields (Step 4 movement capture + Step 6.5 door):
 floor_yesterday: [previous entry's primary floor]   # omit if no previous entry
 moved_because: body | witness | rupture | rope | role | story   # omit if unknown
@@ -352,7 +362,7 @@ creationDate: YYYY-MM-DD
 ---
 # [[FloorName|FloorName]]
 
-**[[The High-Rise Series|High-Rise]] Floor:** [X]
+**High-Rise Floor:** [X]
 **[[Energy|Energy]]:** [one-line energy description]
 
 [2-3 sentence description of the floor — what it feels like, what it is.]
