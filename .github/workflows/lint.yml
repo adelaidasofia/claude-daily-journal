@@ -14,7 +14,7 @@ jobs:
     name: JSON validity
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v6
       - name: validate
         run: |
           set -e
@@ -40,7 +40,7 @@ jobs:
     # the file is written.
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v6
         with:
           fetch-depth: 0
       - name: fetch base branch
@@ -65,7 +65,20 @@ jobs:
               *.md|*.sh|*.ps1|*.py|*.json|*.yml|*.yaml|*.txt|.env.example) ;;
               *) continue ;;
             esac
-            if matches=$(grep -nE "$P" "$f" 2>/dev/null); then
+            # Scan only lines ADDED by this PR, not the whole current file.
+            # A file can legitimately mention these tokens pre-existingly
+            # (e.g. this workflow's own comments explaining the pattern, or
+            # any other file's unrelated prior content) without the PR
+            # having added anything -- scanning the full file whenever it
+            # appears in the changed-files list flags that pre-existing
+            # content as if this PR introduced it. Reconstruct "lineno:
+            # content" for +lines only (skipping the "+++" file header) so
+            # the match message still carries a real new-file line number.
+            if matches=$(git diff -U0 "$BASE"..HEAD -- "$f" | awk '
+              /^\+\+\+/ { next }
+              /^@@/ { match($0, /\+[0-9]+/); ln = substr($0, RSTART + 1, RLENGTH - 1) + 0; next }
+              /^\+/ { print ln": "substr($0, 2); ln++; next }
+            ' | grep -E "$P" 2>/dev/null); then
               echo "::error file=$f::private-context token added in this PR"
               echo "$matches" | head -3 | sed 's|^|  |'
               fail=1
