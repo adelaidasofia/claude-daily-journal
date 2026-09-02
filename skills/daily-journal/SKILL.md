@@ -1,7 +1,7 @@
 ---
 name: daily-journal
 description: Use this skill when the user wants to journal, do a daily check-in, process their day, or says /journal. Interviews the user conversationally, identifies their emotional floor using the High-Rise framework, optionally runs behavior accountability and advisory panel commentary, and saves a structured Obsidian markdown entry. Do NOT use for meeting notes, weekly/monthly reviews, or pattern analysis across multiple entries.
-version: 1.4.0
+version: 1.5.0
 ---
 
 # Daily Journal — Interview & Entry
@@ -96,7 +96,7 @@ Coach energy, not parent energy. Run through whichever targets the user configur
 
 **Body-first check (before accepting the story):** Low floors usually arrive body-first, story-second — the mind manufactures a plausible cause after the fact. Before treating a low floor as being about the conversation/person/project the user is blaming, check four things: sleep, food, movement, sunlight. Use what the session already surfaced (Step 0 RescueTime, the Step 3 accountability answers, yesterday's entry) before asking — infer, don't interrogate; ask only for the gaps. Record as `body_check` frontmatter (four y/n values). If two or more are "no," name it gently: "Before we decide this is about [story] — you're underslept and haven't eaten. Some of this floor might be body, not story." The floor is still real either way; this changes the prescription, not the validity.
 
-**Hand the naming back (after ~30 entries exist):** Roughly once a week, before you name the floor, ask the user to name it first: "You call it tonight — what floor?" Confirm or gently offer an alternative. The skill's job is to train the muscle, not become it.
+**NEVER ask the user to name the floor. Name it yourself, then check.** This is a direct, repeated user correction: naming the floor is the skill's job, not the user's. You hold the day's data, the entry history and the floor definitions; the user holds a tired brain at midnight. Do: state the floor, give the one line of evidence that picked it over its nearest neighbour or shadow twin, then ask only "is that right?" A correction from the user is the check working, not a failure. BANNED: "You call it tonight — what floor?", "What floor does that put you on?", "Which floor do you want to tag?", and every variant that makes the naming the user's homework. Applies to the shadow-twin probe too — state which twin you read and why, do not quiz.
 
 Name the PRIMARY floor — the one floor the entry *landed* on. Naming a single base floor is deliberate: it is the move that reduces the charge, and it keeps the long-run data clean. Then, ONLY when the day moved from one floor to another, record the path in order as `floor_arc` (last element = the primary floor):
 

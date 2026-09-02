@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.0 — 2026-09-01
+
+**The journal names your floor for you now.** Same journal-skill change as today's `ai-brain-starter` update, shipped in lockstep.
+
+- **No more "you call it tonight — what floor?"** The skill used to hand the naming back to you about once a week, on the theory that it trains the muscle. In practice it asks you to do the one piece of work the assistant is best set up to do: by the time you see that question it has already pulled your whole day, read your entry history, and has the 34 floor definitions and the shadow-twin tests in front of it. You have a tired brain at midnight.
+- **What it does instead:** names the floor, gives you the one thing that made it pick that floor over the one next door, then asks only whether that's right. Correcting it is the point — that's the check working, not you failing a quiz.
+- **Shadow-twin question too:** it now tells you which twin it read and why, instead of testing you on the difference between Acceptance and Resignation.
+
 ## 1.4.0 — 2026-07-14
 
 **Movement mechanics: the journal now tracks how you MOVE between floors, not just where you stand.** Same journal-skill changes as today's `ai-brain-starter` update, shipped in lockstep.
