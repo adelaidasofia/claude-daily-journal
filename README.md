@@ -13,7 +13,7 @@
 
 <!-- mycelium-badges:end -->
 
-A Claude Code plugin for conversational daily journaling with emotional floor detection, optional behavior accountability, and an advisory panel that comes with every entry unless you say no (on by default, one setting turns it off). Saves structured Obsidian markdown entries from your first message.
+A Claude Code plugin for conversational daily journaling with emotional floor detection, optional behavior accountability, and an advisory panel that comes with each entry by default (decline it any session, or turn it off). Saves structured Obsidian markdown entries from your first message.
 
 Built around a **34-floor emotional altitude scale** — a framework that gives language to where you are, not just what happened.
 
