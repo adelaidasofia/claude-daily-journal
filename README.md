@@ -78,7 +78,7 @@ On first use, preferences are saved to `[VAULT_PATH]/.journal-prefs.md`:
 vault_path: ~/Documents/MyVault
 journal_folder: Journal/[YYYY-MM]
 panel: enabled
-panel_log: Journal/Panel Feedback Log.md   # optional; this is the default
+panel_log: Journal/Panel Feedback Log.md   # optional; default is Panel Feedback Log.md at the root of your journal folder
 accountability: enabled
 movement_target: 4x/week
 sleep_target: before midnight
@@ -109,9 +109,9 @@ The panel pulls 3–5 named thinkers into a brief commentary on your entry. The 
 
 It runs in two passes. A first take of three voices lands in the same reply that saves your entry, so even a two-line check-in gets one. The full panel replaces it in the reply that names your floor. Every panel is shown to you in chat before it is written to your note, and nothing waits for your approval: cut, swap or add a voice whenever you like.
 
-Each panelist speaks in their authentic voice. At least one dissents or challenges rather than validates, and every dissent is collected in a Panel Feedback Log (`Journal/Panel Feedback Log.md` by default), so a pushback that keeps coming back is easy to spot. The commentary lives in a clearly-labeled section below your journal body, never blended into your original writing. If you journal more than once in a day, each session adds its own panel block and never rewrites an earlier one.
+Each panelist speaks in their authentic voice. At least one dissents or challenges rather than validates, and each session's dissent and omission lines are collected in a Panel Feedback Log at the root of your journal folder, so a pushback that keeps coming back is easy to spot. The commentary lives in a clearly-labeled section below your journal body, never blended into your original writing. If you journal more than once in a day, each session adds its own panel block and never rewrites an earlier one.
 
-Say "no panel" during a session and that session gets a one-line note instead. Set `panel: disabled` in your prefs to turn the panel off entirely. You can also customize your panel or build your own roster by editing the SKILL.md.
+Say "no panel" during a session and that session gets a one-line note instead. To turn the panel off entirely, set `panel: disabled` in your prefs, or tell Claude you want it gone for good and it updates your prefs for you. You can also customize your panel or build your own roster by editing the SKILL.md.
 
 ---
 
