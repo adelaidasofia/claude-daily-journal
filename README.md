@@ -13,7 +13,7 @@
 
 <!-- mycelium-badges:end -->
 
-A Claude Code plugin for conversational daily journaling with emotional floor detection, optional behavior accountability, and an advisory panel on every entry (on by default, one setting turns it off). Saves structured Obsidian markdown entries from your first message.
+A Claude Code plugin for conversational daily journaling with emotional floor detection, optional behavior accountability, and an advisory panel that comes with every entry unless you say no (on by default, one setting turns it off). Saves structured Obsidian markdown entries from your first message.
 
 Built around a **34-floor emotional altitude scale** — a framework that gives language to where you are, not just what happened.
 
@@ -25,7 +25,7 @@ Built around a **34-floor emotional altitude scale** — a framework that gives 
 2. Identifies your emotional floor — the primary altitude you're operating from
 3. Optionally tracks behavior patterns you care about: movement, sleep, focus, meditation
 4. Runs a panel of named advisors relevant to what came up: a quick first take the moment your entry is saved, then the full panel once your floor is named (on by default, and you can turn it off)
-5. Saves your entry from your first message, so a quick check-in is never lost, then keeps updating that same note as you go. Your voice stays in the body, with the panel commentary separated below a divider
+5. Saves your entry from your first message, so a quick check-in is kept even if you stop there, then adds each new message to that same note as you go. Your voice stays in the body, with the panel commentary separated below a divider
 
 The floor framework is the differentiator. Over time, your journal becomes a navigable dataset: which emotions appear most, what triggers them, how you move between floors, which patterns repeat across months and years.
 
