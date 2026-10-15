@@ -1,12 +1,12 @@
 ---
 name: daily-journal
-description: Use this skill when the user wants to journal, do a daily check-in, process their day, or says /journal. Interviews the user conversationally, identifies their emotional floor using the High-Rise framework, optionally runs behavior accountability and advisory panel commentary, and saves a structured Obsidian markdown entry. Do NOT use for meeting notes, weekly/monthly reviews, or pattern analysis across multiple entries.
-version: 1.5.0
+description: Use this skill when the user wants to journal, do a daily check-in, process their day, or says /journal. Also fires for a quick one-line check-in and for a second session the same day (it resumes that day's entry). Saves the entry from the user's first message, interviews them conversationally, identifies their emotional floor using the High-Rise framework, adds an advisory panel to each session unless the user declines it or turned it off, and optionally runs behavior accountability. Do NOT use for meeting notes, weekly/monthly reviews, or pattern analysis across multiple entries.
+version: 1.6.0
 ---
 
 # Daily Journal — Interview & Entry
 
-A conversational journaling skill that interviews the user, identifies their emotional floor on a 34-level scale, and saves a structured Obsidian note. Optional modules: behavior accountability, advisory panel commentary.
+A conversational journaling skill that interviews the user, identifies their emotional floor on a 34-level scale, and saves a structured Obsidian note from the user's first message. Optional modules: behavior accountability and the advisory panel (on by default; while it is on, every session gets one unless the user declines it).
 
 **The High-Rise framework** is the core differentiator: 34 floors from Disgust to Peace. Not a ladder to climb once — rooms you move between. The question is not where you are, it's whether you know. Full framework: https://adelaidadiazroa.substack.com/s/internal-design
 
@@ -17,10 +17,12 @@ A conversational journaling skill that interviews the user, identifies their emo
 Ask the user for:
 1. **Vault path** — root folder of their Obsidian vault (e.g., `~/Documents/MyVault`). Store as `VAULT_PATH`.
 2. **Journal subfolder** — default: `Journal/[YYYY-MM]`.
-3. **Panel on/off** — advisory panel after the interview? Default: yes.
+3. **Panel on/off** — advisory panel on every entry (a short first take when the entry is saved, the full panel once the floor is named)? Default: yes. Off means a plain journal with no panel at all. Save it as `panel: enabled` or `panel: disabled`.
 4. **Accountability on/off** — behavior check-ins? Default: ask. If yes, ask for their targets.
 
-Save to `[VAULT_PATH]/.journal-prefs.md`. Read on every future invocation before starting.
+Once you have the vault path, read `[VAULT_PATH]/.journal-prefs.md` if it exists and use it: the user has set up before, so nothing in it is reset or asked again. Only if it is missing, create it right away, with the default journal subfolder and `pending` for the other questions not answered yet, and update it as each answer comes in. A pending question is asked in a later session's first question slot after the capture, before the door check, whether or not the panel is on; until then a pending panel setting counts as on. Read the file on every invocation before starting.
+
+**If the user opened with journal content on first use, setup never holds it back.** Ask only for the vault path. When they answer, read or create the prefs file as above and capture their words (Steps 1.5 and 1.5b, with the panel on unless the existing prefs turned it off), so the entry exists from that moment. Then ask the remaining setup questions in that same session, one per reply, the journal subfolder first, before the door check and the follow-ups. If they choose a different journal subfolder, move today's entry into it (onto a free name, Step 7) and the Panel Feedback Log to the new journal folder's root, appending its entries to a log already there rather than writing over it; if they turn the panel off, apply the off switch (it counts as this session's decline).
 
 ---
 
@@ -34,14 +36,44 @@ The Substack link and framework reference remain the same regardless of language
 
 ---
 
-## Crisis protocol (safety override — overrides every step below)
+## The Capture-First Contract (the spine; read before the flow)
+
+**The entry is saved to disk from the user's first substantive message, before any follow-up question, accountability beat, floor analysis or panel, and, while the panel is on, the same reply adds a first-take panel to it.** Everything after that first save is enrichment that updates the same file in place. The interview is opt-in. The capture is guaranteed, and so is the panel whenever the panel is on.
+
+Why: most people open `/journal`, type what happened, and leave. When the entry only saved at the end of the interview, every one of those sessions lost it. A raw entry that got written beats a perfect one that never did.
+
+1. **Capture (mandatory, immediate).** The moment the user gives real journal content, pasted with `/journal` or typed in answer to the Step 1 opener, write a complete, valid entry (Step 1.5). Then, with the panel on, in the same reply and before any follow-up question, run the first-take panel (Step 1.5b): show it in chat, then write it into the file. An entry that leaves the first reply has the user's words and, with the panel on, its panel.
+2. **Enrich (opt-in, in place).** If the user keeps going, run Steps 2–9 and update the same file. The full panel (Step 5) replaces the first take. Never create a second file for the same day unless the user asks for a separate entry (Step 0.0).
+
+**Every reply saves the user's words.** Until the journal session closes (the user says they are done, or clearly moves on to other work; a side request in the middle, such as loading a tool or checking a file, does not close it), every reply after the capture first appends the user's new message(s) to the verbatim appendix with a targeted edit (Step 1.5), and records a door-check answer as `door_prev` in the same edit. The narrative body can catch up at the next enrichment save; their words never wait. A user who answers three follow-ups and closes the window keeps every answer the skill has replied to.
+
+**Graceful exit, at every step after the first save.** If the user signals done ("that's it," "save it," "I'm good"), goes quiet, or stops engaging: finalize the existing file in place and stop. Flush any messages since the last save into the verbatim appendix, re-check the floor on the fuller picture (unless the user skipped floor identification), run the light idea and to-do scans (Steps 8 and 8.5) and the Panel Feedback Log sync (Step 9), and confirm what you saved. With the panel on, this session's first take is already in the file; if it somehow is not, show it and write it before you stop, unless the user declined the panel this session or the crisis protocol is active. Re-prompt at most once. Never hold the entry hostage to any later step.
+
+**Panel-Always Rule (whenever the panel is on).** Every entry carries the `## Panel (synthetic — not the user's original thought)` section, and every session that saves to the entry adds its own block there.
+- **Blocks are append-only.** A session writes and edits only its own block, never an earlier session's. Each block after the entry's first opens with an italic session label in the entry's language (`*Later session, HH:MM:*`), and the label stays when the full panel replaces the first take.
+- **Only two cases leave a session without a panel:** an explicit decline and the crisis protocol. Each writes a one-line note as this session's block, in the entry's language (after the session label when it is not the entry's first block), so the absence is never silent. Decline: this session's block becomes `*Panel declined this session.*`, replacing whatever it holds (placeholder, first take or full panel; never an earlier block), and panel work stops for the session; if the user later asks for one, run the full panel (Step 5) as this session's block. Crisis: no further panel this session; a first take or full panel already written stays, otherwise the block is `*No panel this session: crisis protocol.*`
+- Leaving early, going quiet or wrapping up is not a decline; the first take already covers it.
+- A run with no one to answer saves no entry at all, whether it is a scheduled run or a headless one (`claude -p "/journal ..."`): an entry needs the user's own words, and a panel has to be shown before it is written, with nobody there to see it. If the prompt carried the user's words, say plainly that they were not saved and invite them to open `/journal` in a live session.
+
+Why: when the panel was the last, optional step, sessions that ended early saved entries with no panel, and nobody noticed until the user asked where it went.
+
+**The panel switch stays the user's.** `panel: disabled` in `.journal-prefs.md` (or any off value, such as `off`, `no` or `false`) turns the panel off: no first take, no full panel, no mid-interview voices, no new panel block, no log entry, unless the user asks for a panel in that session (below). The skill never overrides that standing choice on its own. Capture-first, resume and graceful exit still apply.
+- When the user says in chat that they want the panel gone for good, not just tonight ("stop doing the panel," "I don't want the panel anymore"), set `panel: disabled` in the prefs file, say so in one line, and treat it as this session's decline; when they ask for it back for good, set `panel: enabled`. If it is unclear whether they mean tonight or for good, treat it as tonight only and mention the other option.
+- A user with the panel off can still ask for one on a given night ("what would the panel say about this?"): run the full panel (Step 5) as this session's block, shown first and logged like any full panel, and leave the switch off unless they ask to turn it back on for good.
+- Turning the panel off never deletes panel blocks from earlier sessions or entries.
+
+This contract overrides any "save at the end" wording below: read a later "save" as "update the already-saved file."
+
+---
+
+## Crisis protocol (safety override: overrides every step in this skill, including the contract above)
 
 If at ANY point the user's language flips to total-self statements ("I'm worthless", "I hate myself"), somatic dysregulation ("can't breathe", "drowning"), acute grief, or crisis ideation ("I want to disappear", not wanting to be alive):
 
 1. **Stop the mechanics.** No accountability beats, no panel, no gratitude staging, no door. Drop the interview structure and stay with them — witness first, plain warm language, no rushing to fix.
 2. **Ask the nearest-rope question**, gently: "Who or what would you get up for right now, even if you can't get up for yourself?" A dog, a person, a plant, a promise all count. Don't push past a non-answer.
 3. **Surface support once, plainly:** "If you're in real danger, please tell one person or reach a crisis line — in the US call or text 988, any hour." Adapt to the user's country if known. Say it once; don't repeat it every message.
-4. **Save anyway.** Skip the panel and the Step 6 approval step — save their words verbatim, floor tagged from what you heard, no panel section. Tell them it's saved.
+4. **The capture save still happens.** Save their words verbatim with the floor you heard, and run no further panel this session: a first take or full panel already written stays; otherwise, with the panel on, this session's panel block is the one-line crisis note (Panel-Always Rule). Tell them it's saved. Enrichment can wait for another day. If the vault path is not known yet (first use), stay with them first; ask where to save only when the question will not feel like paperwork, and save as soon as you have it.
 
 When in doubt about whether this applies, err toward applying it.
 
@@ -49,13 +81,29 @@ When in doubt about whether this applies, err toward applying it.
 
 ## Flow
 
+### Step 0.0: Resume or create (run first)
+
+Capture-first writes the entry early, so a second `/journal` the same day resumes it instead of creating a duplicate.
+
+1. **Target date.** A session that starts before 3:45 AM belongs to the previous day: a 1 AM session finishes yesterday's entry, and a new entry created then carries yesterday's date in `creationDate`. Every later "today" in this skill means the target date: today's entry, the Monday question, the log heading.
+2. **Look for that day's entry:** a journal entry (a file with a `## Journal` section, never a floor note) in the journal folder (current or previous monthly subfolder) whose frontmatter `creationDate` starts with the target date (`YYYY-MM-DD`). If more than one carries that date (the user asked for a separate entry), resume the one modified most recently.
+3. **Found: resume it.** Read it, and do not create a new file. Every save this session, the capture save (Step 1.5) and the finalize (Step 7), updates that file with targeted edits, never a whole-file rewrite from memory:
+   - Earlier sessions' verbatim messages and panel blocks stay byte-for-byte. Add this session's messages after them, and write or replace only this session's panel block.
+   - Keep the frontmatter values earlier sessions set (`door_prev`, `door`, `body_check`, the movement fields) unless this session changes them, and never move `entry_status` back from `enriched` to `captured`.
+   - New content folds into the `## Journal` body, and the floor is re-read on the fuller picture.
+
+   Skip the door check if the entry already records `door_prev`, skip the Monday question if the entry already holds an answer to it, and open lightly ("Picking up today's entry. Keep going.") instead of the time-of-day opener.
+4. **Not found: create.** Step 1.5 writes the day's file.
+
+One day, one entry that grows across sessions. Start a second file only if the user explicitly asks for a separate entry.
+
 ### Step 0 (optional): RescueTime
 
-If the user has RescueTime MCP connected, pull `get_today_summary` now — grounds the accountability check in data, not story. Skip silently if not connected.
+If the user has RescueTime MCP connected, pull `get_today_summary` now — grounds the accountability check in data, not story. Skip silently if not connected. Never let this delay the capture: if the user opened with content, save first (Step 1.5), then the first take (Step 1.5b), then pull. Before 3:45 AM the summary covers the new calendar day, not the target date (Step 0.0); say so rather than mixing the two days.
 
 ### Step 1: Open check-in
 
-**Door check first (if the previous entry set one):** If the most recent journal entry's frontmatter has a `door:` (the one small action they committed to at close), close that loop before anything else: "Yesterday you said you'd [door]. Did it happen?" Record the answer as `door_prev: done | partial | skipped` for today's frontmatter. No moralizing on a skip — data and continuity, not discipline. Skip silently if no previous door exists.
+**Door check first (if the previous entry set one):** If the most recent entry before today's has a `door:` in its frontmatter (the one small action they committed to at close), close that loop before anything else: "Yesterday you said you'd [door]. Did it happen?" Record the answer as `door_prev: done | partial | skipped` in today's frontmatter at this session's capture save (Step 1.5), with the answer in the verbatim appendix, or in the same reply's save if this session has already captured. A door answer on its own opens no entry and no panel block. No moralizing on a skip: data and continuity, not discipline. Skip silently if no previous door exists, or if today's entry already records `door_prev` (an earlier session today asked).
 
 One question. Pick based on time of day:
 - Morning: "How are you waking up today? What's on your mind?"
@@ -63,6 +111,39 @@ One question. Pick based on time of day:
 - Evening: "How was today? What's sitting with you right now?"
 
 **Monday:** Add after the opener: "It's Monday — what's the ONE thing this week that, if done, would make everything else easier or unnecessary?"
+
+**Capture comes first:** once the user answers with real content, go straight to Step 1.5. If they opened with content alongside `/journal`, the capture save and the first take come first; then any pending setup question (Setup), the door check and the Monday question become the next questions, one per reply, before the Step 2 follow-ups. An answer to the door check alone is not journal content.
+
+### Step 1.5: Capture save (write the entry now)
+
+**Trigger:** real journal content from the user, pasted alongside `/journal` or given in answer to the Step 1 opener; anything more than a bare "hey". Save now. Do not wait for follow-ups, the floor, the panel or RescueTime.
+
+**Write a complete, standalone entry** in the Step 7 format, with capture-stage values:
+- **Frontmatter:** `creationDate`; `floor` and `floor_level` as your best read so far (provisional; Step 4 finalizes it); `entry_status: captured` (Step 7 flips it to `enriched` if the interview continues past capture); `door_prev` if Step 1 asked. Leave out fields you don't know yet (`body_check`, the movement fields) rather than guessing. On a resumed day, keep the values earlier sessions set (Step 0.0).
+- **`## Journal`:** their content so far, in their voice, lightly shaped. A real entry, not a stub.
+- **Verbatim appendix:** every message they have typed so far, word-for-word.
+- **Panel section (panel on):** this session's block as a one-line placeholder in the entry's language, `*First take not written yet.*` (after the session label when it is not the entry's first block), so a reply cut off right here still leaves a visible marker. Step 1.5b replaces it in this same reply. A decline or crisis capture writes its one-line note here instead.
+- **Floor tag line and `## Tags`:** best effort from the current content.
+
+Save it the way Step 7 saves, then verify it exists (`ls -la`); never fail silently. Pick the filename now with Step 7's rule; rename in place later only if the day's theme clearly shifts, never into a second file and never onto an existing name (Step 7). If you rename, update the `**Entry:**` link in every Panel Feedback Log entry that points to the old name.
+
+Keep it light: "Got it, saved." Then Step 1.5b, then Step 2. They don't need to feel the mechanics.
+
+Every later save is an update to this file, made with targeted edits (append this session's new messages, write or replace only this session's panel block, update the body, floor and frontmatter). Never rewrite the whole file from memory. Re-read it first whenever another session may have written to it since your last read (a resumed day, or a session left open for a while). On a resumed day (Step 0.0) the first save this session is already an update, and earlier sessions' messages and panel blocks are never rewritten.
+
+### Step 1.5b: First-take panel (panel on; same reply as the capture)
+
+Right after the capture save, in the same reply, before any follow-up question:
+
+1. Run the omission pass (Step 5) on what you have so far.
+2. Pick **3 voices** with the Step 4.5 trigger table (full roster in Step 5). Triggers that fired in the first message are the obvious picks.
+3. Use Step 5's format, shorter: one paragraph per panelist, **2–3 sentences**, `**Name** (concrete proof)`, optional `*[Pullback: ...]*`. **At least one dissents.** End with the `**Dissent:**` line, plus `**Omission flagged:**` when the pass found something.
+4. **Show it in chat first**, complete and exactly as it will appear in the file, first-take note included (Step 6).
+5. **Then write it into the file**, replacing this session's placeholder. The block opens with the session label when it is not the entry's first block, then a one-line note in the entry's language (English: `*First take. The full panel runs once the floor is named.*`, or `*First take. The full panel runs later in this session.*` when the user skipped floor identification).
+6. Log its Dissent and Omission lines to the Panel Feedback Log now (Step 9), so a session that ends here still logs them.
+7. Then ask one question. Pending setup questions come first (Setup); after that, the door check if Step 1 still owes it, then the Monday question on a Monday, otherwise the first Step 2 follow-up. Step 6's one-line invitation covers edits. Never wait for approval before writing the panel.
+
+On a resumed day, this session's block goes beneath the earlier ones and no earlier block is edited. The separation and verbatim rules apply unchanged: panel lines never enter `## Journal`.
 
 ### Step 2: Follow the thread (2–4 questions)
 
@@ -93,6 +174,8 @@ Coach energy, not parent energy. Run through whichever targets the user configur
 - Pre-confrontation: "Are you on a low floor right now? Is this real feedback or projection?"
 
 ### Step 4: Identify the floor
+
+**Skipped floor identification:** if the user asks to skip it, skip this step for the session. Remove only what this session's capture added (the provisional `floor`, `floor_level` and floor tag line), keep anything an earlier session today set, and run the full panel (Step 5) in the reply that would have named the floor.
 
 **Body-first check (before accepting the story):** Low floors usually arrive body-first, story-second — the mind manufactures a plausible cause after the fact. Before treating a low floor as being about the conversation/person/project the user is blaming, check four things: sleep, food, movement, sunlight. Use what the session already surfaced (Step 0 RescueTime, the Step 3 accountability answers, yesterday's entry) before asking — infer, don't interrogate; ask only for the gaps. Record as `body_check` frontmatter (four y/n values). If two or more are "no," name it gently: "Before we decide this is about [story] — you're underslept and haven't eaten. Some of this floor might be body, not story." The floor is still real either way; this changes the prescription, not the validity.
 
@@ -174,7 +257,7 @@ Tag what the answer reveals, not what the user first claimed. If a correction ha
 - Bittersweet = Grief (10) + Joy (33)
 - Vulnerability = Shame (2) moving toward Love (29) — a staircase, not a floor
 
-**Movement capture (builds your movement history):** Look up the previous entry's floor (the most recent file in the journal folder) and record `floor_yesterday` plus, when the floor changed or notably held, one `moved_because` value:
+**Movement capture (builds your movement history):** Look up the previous entry's floor (the most recent entry before today's) and record `floor_yesterday` plus, when the floor changed or notably held, one `moved_because` value:
 - `body` — sleep, food, cycle, illness, weather drove it
 - `witness` — being seen/unseen, honest conversation, isolation
 - `rupture` — trust broken, loss, the source of a high floor becoming the wound
@@ -214,11 +297,13 @@ During Steps 1–3, when the user's language matches a trigger below, pull ONE p
 | Needs a simple truth mirror | Curious Friend / Reflective Listener |
 | Controllables vs. rumination | Marcus Aurelius |
 
-### Step 5: Advisory panel (skip if opted out)
+### Step 5: Full advisory panel (replaces the first take)
 
-**Omission pass first:** What did the user NOT say that a panelist would notice? Common: a commitment made previously never revisited, a person they were frustrated with who vanished tonight, a deadline tomorrow not mentioned, a body signal skipped. If one exists, one panelist must name it.
+**Timing: run it in the same reply that names the floor (Step 4), never later.** It replaces this session's first take (drop the first-take note, keep the session label); earlier sessions' blocks stay exactly as they were. If the user corrects the floor, show the adjusted lines before writing them (Step 6). If the session ends before Step 4, the first take stands. If the user skipped floor identification, run it where Step 4 would have run. No full panel while the crisis protocol is active, none after a decline this session unless the user asks for one, and none when the panel is off in `.journal-prefs.md` unless the user asks for one this session (Panel-Always Rule).
 
-**Selection:** 3–5 panelists most relevant to what came up. Every voice must be a real named person. If no one fits, say so.
+**Omission pass first (before every panel: the Step 1.5b first take and this one):** What did the user NOT say that a panelist would notice? Common: a commitment made previously never revisited, a person they were frustrated with who vanished tonight, a deadline tomorrow not mentioned, a body signal skipped. If one exists, one panelist must name it in one sentence.
+
+**Selection:** 3–5 panelists most relevant to what came up, from the roster below (its named archetypes count). When nothing fits cleanly, pick the closest fits: while the panel is on, a panel always runs.
 
 **Format:** Parallel single paragraphs, NOT a dialogue. 3–5 sentences each, authentic voice. Weave in pushback as `*[Pullback: ...]*`. **At least one must dissent or challenge** — not console, not validate.
 
@@ -256,16 +341,26 @@ Thich Nhat Hanh · Marcus Aurelius · Yuval Noah Harari · Mo Gawdat · Maya Ang
 *Creativity:*
 Rick Rubin · Elizabeth Gilbert · Twyla Tharp
 
-### Step 6: Confirm before saving
+### Step 6: Show every panel before it lands, then write it (never wait)
 
-Show the full panel inline. Then:
-> "Panel above. Floor: [Floor]. Approve as-is, edit a voice, swap a panelist, or add one?"
+Applies to the Step 1.5b first take, the Step 5 full panel and every edit to either.
 
-Wait for explicit yes. Never save silently.
+**Show it in chat first:** the complete block exactly as it will appear in the file, every panelist's paragraph plus the Dissent and Omission lines. Never a one-line summary. The user sees synthetic voices before they are saved next to their own words; that part is non-negotiable.
+
+**Then write it in the same turn** and say, for the full panel:
+> "Panel's in the entry. Floor: [Floor]. Edit a voice, swap a panelist, or add one?"
+
+For a first take, leave the floor out: "Panel's in the entry. Swap or cut a voice anytime."
+
+After writing the full panel, update this session's Panel Feedback Log entry (or append one if none exists yet) right away (Step 9), so a session that ends here logs the full panel, not the first take.
+
+Edits follow the same rule: show any changed or added panel text in chat, then write it. A cut voice can be written straight away when no other line changes; if the cut changes the Dissent or Omission line, or removes the only dissent, show the new lines before writing them. Never wait for approval before writing: showing first is the protection, and holding the write for a reply is how sessions ended with no panel saved.
+
+No panel only in the Panel-Always Rule cases (an explicit decline this session, the crisis protocol) or when the panel is off in `.journal-prefs.md`. The capture itself never waits on the panel: Step 1.5 saves first.
 
 ### Step 6.5: The door (map + door, never map alone)
 
-Naming a floor without pairing it to an action produces articulate stuck people — insight feels like progress and becomes its favorite disguise. Before saving, offer ONE small, concrete, physically doable action matched to where they are, and get a when:
+Naming a floor without pairing it to an action produces articulate stuck people — insight feels like progress and becomes its favorite disguise. Before finalizing, offer ONE small, concrete, physically doable action matched to where they are, and get a when:
 
 - **Low floors:** body-first or witness-first, never "think about it." A walk before a specific time, protein at breakfast, phone in the other room tonight, one honest sentence texted to one named person, ten minutes of sunlight before 10am.
 - **Middle floors:** one small brave action (the Courage mechanism) — send the thing, ask the thing, book the thing. Small and dated beats big and vague.
@@ -273,13 +368,15 @@ Naming a floor without pairing it to an action produces articulate stuck people 
 
 **The Maté guard (check before prescribing):** some floors deserve time, not exits. Fresh Grief, real Anger at something genuinely wrong, a rupture days old — moving off too fast is suppression wearing resilience's clothes. If the floor is recent and proportionate to a real event, the door is a *container*, not an exit: "ten uninterrupted minutes to feel this fully," "tell one person what happened," "no big decisions until Thursday." Ask yourself: does this floor need a way out, or more time? Prescribe accordingly.
 
-One door only. Write it to frontmatter as `door:` (action + when). Tomorrow's session opens by checking it (Step 1 door check). If the user declines, save without one — never force it, never let it block the save. The door is distinct from Step 8.5 to-dos: to-dos are tasks the day surfaced; the door is the one floor-matched move for tomorrow.
+One door only. Write it to frontmatter as `door:` (action + when). Tomorrow's session opens by checking it (Step 1 door check). If the user declines or the session is a quick capture-and-bail, finalize without one. Never force it, never let it block the save. The door is distinct from Step 8.5 to-dos: to-dos are tasks the day surfaced; the door is the one floor-matched move for tomorrow.
 
-### Step 7: Save the entry
+### Step 7: Finalize the entry (in-place update of the Step 1.5 file)
 
-**Path:** `[VAULT_PATH]/Journal/[YYYY-MM]/[Descriptive Title].md`
+**This is an update, not a fresh create.** The file exists since the capture save. Update it in place with the finalized floor, the enriched body, the full verbatim appendix (every message to date), the behavior line and, when the panel is on, the panel section (one block per session, each a panel or its one-line note; the full panel replaces this session's first take). Use targeted edits (Step 1.5): earlier messages and panel blocks are never rewritten. Set `entry_status: enriched` once the interview went past capture. Never create a second file for the same day; if you refine the filename, rename in place (`mv`) onto a free name only and update its Panel Feedback Log links (Step 1.5).
 
-**Filename:** 5–8 words, Title Case. Examples: `Good Team Meeting Felt the Momentum.md`, `Hard Conversation Finally Had It.md`
+**Path:** `[VAULT_PATH]/[journal subfolder]/[Descriptive Title].md` (default subfolder `Journal/[YYYY-MM]`), where `YYYY-MM` is the month of the entry's `creationDate` (Step 0.0).
+
+**Filename:** 5–8 words, Title Case. Examples: `Good Team Meeting Felt the Momentum.md`, `Hard Conversation Finally Had It.md`. Never create or rename onto a title already used anywhere in the journal folder (any monthly subfolder): titles repeat across days, writing over one destroys another day's entry, and a duplicate title makes log links ambiguous. If the title is taken, add the entry's date (`Hard Conversation Finally Had It 2026-10-15.md`), and a number if that is taken too.
 
 **Format:**
 
@@ -289,6 +386,7 @@ creationDate: YYYY-MM-DDTHH:MM
 floor: PrimaryFloor              # single floor name — where the entry LANDED
 # floor_level: Low | Middle | High
 # floor_arc: [FloorA, FloorB, PrimaryFloor]   # OPTIONAL — ordered path through the day, last element = floor. Add ONLY when the day moved; omit on a still day.
+entry_status: captured | enriched   # captured = saved at first touch (Step 1.5); enriched = the interview went past capture
 # Movement fields (Step 4 movement capture + Step 6.5 door):
 floor_yesterday: [previous entry's primary floor]   # omit if no previous entry
 moved_because: body | witness | rupture | rope | role | story   # omit if unknown
@@ -302,7 +400,7 @@ body_check: {slept: y|n, ate: y|n, moved: y|n, sunlight: y|n}
 [First-person narrative in the user's voice. Stream of consciousness, honest, casual. Specific details they shared. Don't over-polish. Include gratitude note naturally if they gave one. Include insights surfaced during the interview they wouldn't have written alone.]
 
 ### My responses to the panel (verbatim, every message I typed back in this session)
-*Required by the verbatim-capture rule. Every message the user typed during this journal session, word-for-word, in chronological order. Do not paraphrase, do not trim, do not fix typos. Each message gets a short italic context label, then the message as a blockquote.*
+*Required by the verbatim-capture rule. Every message the user typed during this journal session, word-for-word, in chronological order. Do not paraphrase, do not trim, do not fix typos. Each message gets a short italic context label, then the message as a blockquote. On a resumed day, earlier sessions' messages stay and this session's follow them.*
 
 *On [what this message was about]:*
 > [verbatim message 1]
@@ -320,7 +418,9 @@ body_check: {slept: y|n, ate: y|n, moved: y|n, sunlight: y|n}
 ## Panel (synthetic — not the user's original thought)
 > Everything below this line is AI-generated panel commentary, kept separate so rereads distinguish original voice from advisor reactions.
 
-[3–5 parallel paragraphs. **Name** (credential), 3–5 sentences in their authentic voice. *[Pullback: ...]* inline. At least one dissent clearly visible.]
+[One block per session, oldest first; never edit an earlier block. If a panel lands on an entry with no panel section yet, add this heading and its disclaimer line first. Each block after the entry's first opens with `*Later session, HH:MM:*`; a first take then adds its first-take note. A declined or crisis session's block is its one-line note instead of a panel. Leave the section out only on an entry that never had a panel block because the panel was off in `.journal-prefs.md`; turning the panel off never deletes blocks already written.]
+
+[3–5 parallel paragraphs (3 in a first take). **Name** (credential), 3–5 sentences (2–3 in a first take) in their authentic voice. *[Pullback: ...]* inline. At least one dissent clearly visible.]
 
 **Dissent:** [who pushed back and what they challenged]
 **Omission flagged:** [one line — only if omission pass found something; delete otherwise]
@@ -406,11 +506,29 @@ Scan for action items. If found, ask: "I caught [X] to-dos. Want me to add them 
 
 Filename and floor. Connect to patterns if you have context. Movement close: "[X]/[target] this week — [brief push or encouragement]."
 
+**Panel Feedback Log (automatic, for every panel a session runs).** Log only this session's panel, one log entry per session: Step 1.5b appends the first take's Dissent and Omission lines, and the full panel updates that same log entry in place right after it is written (Step 6). Whenever this session's panel changes after it was logged (a swap, an added or cut voice), update this session's log entry to match, and after a decline remove it; if nothing was logged yet, append one only when there is a dissent or omission to log. A one-line declined or crisis block has nothing to log. Never ask the user to approve a log write.
+
+Path: `panel_log:` in `.journal-prefs.md` (a path inside the vault) if set; otherwise `Panel Feedback Log.md` at the root of the journal folder, next to the monthly folders (default `[VAULT_PATH]/Journal/Panel Feedback Log.md`). If the file is missing, create it with a one-line header saying it collects synthetic panel reactions. The heading carries the entry's date (Step 0.0's target date) and this session's start time, which is how a later update finds this session's log entry. Format:
+
+```markdown
+### YYYY-MM-DD HH:MM: Daily journal dissent / omission
+
+**Synthetic panel reaction from /journal, not real feedback from these people.**
+
+**Context:** [1 line: what came up in the entry that triggered the dissent or omission]
+**Panelists:** [names of the selected voices]
+**Dissent:** [verbatim from the entry's Dissent line, attributed to the panelist who said it]
+**Omission flagged:** [verbatim from the entry's Omission line, if any]
+**Entry:** [[{filename without .md}]]
+```
+
+Why: a dissent that keeps coming back across entries is a pattern worth acting on, not a random note, and it only becomes visible when every panel's pushback lands in one place.
+
 ---
 
 ## Notes
 
-- Short entries count. Even "Good day. Solid work." documents the good stretches that almost always go unrecorded.
+- Short entries count. Even "Good day. Solid work." documents the good stretches that almost always go unrecorded. A short entry is saved the moment it arrives (Step 1.5) and, with the panel on, gets its first take in the same reply: the panel is part of the entry, not a reward for finishing the interview.
 - Match the user's energy. Quick or deep — don't make it feel like homework.
 - The panel is a daily micro-dose. Keep it sharp.
 - NEVER fail silently. Verify every file save.

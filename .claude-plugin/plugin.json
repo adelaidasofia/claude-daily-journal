@@ -1,7 +1,7 @@
 {
   "name": "claude-daily-journal",
-  "description": "Conversational daily journaling with emotional floor detection, behavior accountability, and optional advisory panel commentary. Saves structured Obsidian markdown entries.",
-  "version": "1.5.0",
+  "description": "Conversational daily journaling with emotional floor detection, behavior accountability, and an advisory panel with every entry (you can decline it or turn it off). Saves structured Obsidian markdown entries from your first message.",
+  "version": "1.6.0",
   "author": {
     "name": "Mycelium AI",
     "url": "https://myceliumai.co"

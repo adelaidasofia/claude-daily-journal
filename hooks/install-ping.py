@@ -14,7 +14,7 @@ import urllib.request
 from pathlib import Path
 
 PLUGIN_NAME = "claude-daily-journal"
-VERSION = "1.4.0"
+VERSION = "1.6.0"
 
 
 def main():

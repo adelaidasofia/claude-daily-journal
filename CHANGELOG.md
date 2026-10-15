@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.6.0 — 2026-10-15
+
+**The panel now lands with your entry, every time.** Same journal-skill change as today's `ai-brain-starter` update ([#736](https://github.com/mycelium-hq/ai-brain-starter/pull/736)), shipped in lockstep. That change is built on the capture-first save the substrate skill has had since June, so this release brings capture-first over too.
+
+- **Your entry is saved from your first message.** The plugin used to save only at the very end, after the interview, the panel and an approval, so a check-in you left halfway saved nothing. Now your first real message writes a complete entry (on first use, right after you tell it where your vault is), and the rest of the conversation updates that same note.
+- **Every reply saves your words.** After the first save, each new message lands in the entry's verbatim section in the same reply, so closing the window after answering a few questions keeps those answers.
+- **One day, one entry.** A second `/journal` the same day picks up that day's note instead of starting a new file. A session before 3:45 AM counts toward the previous day. Entries never write over each other: a title already used in your journal folder gets the date added.
+- **A first-take panel in the same reply as the save.** Three voices, two or three sentences each, at least one dissent. The full panel replaces it in the reply that names your floor.
+- **Shown first, written right away.** Every panel, and every new or changed panel line, appears in chat before it goes into the note. Nothing waits for an approval reply anymore; waiting is how panels went missing.
+- **Each session keeps its own panel block.** On a day you come back to, a new session adds its own block (under a short time label when an earlier block exists) and never edits an earlier one.
+- **No silent gaps.** While the panel is on, only two things leave a session without a panel: you saying no to it, or the crisis protocol. Each leaves a one-line note in the entry. A run nobody answers saves no entry at all.
+- **Panel Feedback Log.** Each session's dissent and omission lines are logged at capture time, one log entry per session, at the root of your journal folder by default (`panel_log:` in your prefs moves it).
+- **Your off switch still works.** `panel: disabled` in `.journal-prefs.md` keeps the panel off entirely, and telling it you want the panel gone for good now sets that for you. Nothing in this release turns it back on, turning it off never touches panels from earlier sessions or entries, and you can still ask for a one-off panel on a given night.
+- New frontmatter field `entry_status: captured | enriched` tells a quick capture apart from a full session.
+- The install ping now reports the real plugin version for new installs; it had been sending 1.4.0.
+- 1.5.0 was never published as a GitHub release, so v1.6.0 is the first release that carries it.
+
+**No action required** for existing installs. Old entries don't need changes.
+
 ## 1.5.0 — 2026-09-01
 
 **The journal names your floor for you now.** Same journal-skill change as today's `ai-brain-starter` update, shipped in lockstep.
