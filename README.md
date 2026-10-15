@@ -13,7 +13,7 @@
 
 <!-- mycelium-badges:end -->
 
-A Claude Code plugin for conversational daily journaling with emotional floor detection, optional behavior accountability, and an optional advisory panel. Saves structured Obsidian markdown entries.
+A Claude Code plugin for conversational daily journaling with emotional floor detection, optional behavior accountability, and an advisory panel on every entry (on by default, one setting turns it off). Saves structured Obsidian markdown entries from your first message.
 
 Built around a **34-floor emotional altitude scale** — a framework that gives language to where you are, not just what happened.
 
@@ -24,8 +24,8 @@ Built around a **34-floor emotional altitude scale** — a framework that gives 
 1. Interviews you conversationally (evening check-in, afternoon pulse, morning intention)
 2. Identifies your emotional floor — the primary altitude you're operating from
 3. Optionally tracks behavior patterns you care about: movement, sleep, focus, meditation
-4. Optionally runs a panel of named advisors relevant to what came up
-5. Saves a first-person Obsidian note with your voice in the body and panel commentary separated below a divider
+4. Runs a panel of named advisors relevant to what came up: a quick first take the moment your entry is saved, then the full panel once your floor is named (on by default, and you can turn it off)
+5. Saves your entry from your first message, so a quick check-in is never lost, then keeps updating that same note as you go. Your voice stays in the body, with the panel commentary separated below a divider
 
 The floor framework is the differentiator. Over time, your journal becomes a navigable dataset: which emotions appear most, what triggers them, how you move between floors, which patterns repeat across months and years.
 
@@ -78,6 +78,7 @@ On first use, preferences are saved to `[VAULT_PATH]/.journal-prefs.md`:
 vault_path: ~/Documents/MyVault
 journal_folder: Journal/[YYYY-MM]
 panel: enabled
+panel_log: Journal/Panel Feedback Log.md   # optional; this is the default
 accountability: enabled
 movement_target: 4x/week
 sleep_target: before midnight
@@ -98,15 +99,19 @@ Each entry saves as:
 
 With YAML frontmatter, a first-person narrative body in your voice, a behavior summary line, and a clearly-labeled panel section separated by a horizontal rule so your words are always distinguishable from the AI commentary.
 
+One day is one entry. The note is written the moment you share something real, and a second `/journal` the same day picks up that same note instead of starting a new one.
+
 ---
 
 ## The advisory panel
 
-The panel is an optional feature that pulls 3–5 named thinkers into a brief commentary after the interview. The panel roster includes public figures across wealth and strategy, psychology, relationships, health, leadership, wisdom, and creativity.
+The panel pulls 3–5 named thinkers into a brief commentary on your entry. The roster includes public figures across wealth and strategy, psychology, relationships, health, leadership, wisdom, and creativity.
 
-Each panelist speaks in their authentic voice. At least one dissents or challenges rather than validates. The commentary lives in a clearly-labeled section below your journal body — never blended into your original writing.
+It runs in two passes. A first take of three voices lands in the same reply that saves your entry, so even a two-line check-in gets one. The full panel replaces it in the reply that names your floor. Every panel is shown to you in chat before it is written to your note, and nothing waits for your approval: cut, swap or add a voice whenever you like.
 
-You can customize your panel, skip it entirely, or build your own roster by editing the SKILL.md.
+Each panelist speaks in their authentic voice. At least one dissents or challenges rather than validates, and every dissent is collected in a Panel Feedback Log (`Journal/Panel Feedback Log.md` by default), so a pushback that keeps coming back is easy to spot. The commentary lives in a clearly-labeled section below your journal body, never blended into your original writing. If you journal more than once in a day, each session adds its own panel block and never rewrites an earlier one.
+
+Say "no panel" during a session and that session gets a one-line note instead. Set `panel: disabled` in your prefs to turn the panel off entirely. You can also customize your panel or build your own roster by editing the SKILL.md.
 
 ---
 
