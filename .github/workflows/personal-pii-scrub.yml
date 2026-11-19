@@ -475,6 +475,33 @@ jobs:
             echo "::notice::PII_PRIVATE_PATTERNS is not set and the markdown tier scans only private-tier tokens. Skipping this tier; set that repo secret to arm it."
             exit 0
           fi
+          # PUBLISHED-NAME EXEMPTION. The roster secret is one flat list that the
+          # source tier also reads, so it carries the bare name of the published
+          # framework (High-Rise). This tier is documented above as skipping
+          # published feature and brand tokens, yet it scanned the whole roster,
+          # so every repo that teaches that framework went red on its own
+          # published docs (claude-daily-journal, red since the two-tier change).
+          # Drop any roster line that matches the bare published name, and scan
+          # the two book-title phrases instead, which stay private. Narrow on
+          # purpose: one published name, markdown tier only, titles still gated.
+          # The source and archive tiers keep scanning the bare name. The notice
+          # prints a count only, never a roster line.
+          MD_PUBLISHED_SPECIMENS=( 'High-Rise' )
+          MD_KEPT=()
+          md_exempted=0
+          for p in "${MD_PATTERNS[@]}"; do
+            published=0
+            for s in "${MD_PUBLISHED_SPECIMENS[@]}"; do
+              if printf '%s\n' "$s" | grep -qE -- "$p"; then published=1; fi
+            done
+            if [ "$published" = "0" ]; then
+              MD_KEPT+=("$p")
+            else
+              md_exempted=$((md_exempted + 1))
+            fi
+          done
+          MD_PATTERNS=( "${MD_KEPT[@]}" '[M]oving Through the [H]igh-Rise' '[T]he [H]igh-Rise [S]eries' )
+          echo "::notice::Markdown tier: exempted $md_exempted roster line(s) that match a published name; scanning ${#MD_PATTERNS[@]} patterns."
           # ONE scan implementation, shared by the positive control and the real
           # scan below (see the source-files step for why the control matters).
           # This tier has its OWN pathspec set, so it needs its OWN control: a
